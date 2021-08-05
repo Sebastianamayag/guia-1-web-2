@@ -14,7 +14,6 @@ conexion.connect((error)=>{
     console.log('Conexión Exitosa!')
 })
 
-
 app.get('/',function(req,res){
     conexion.query('SELECT * FROM users',function(error,rows){
         if(!!error){
@@ -26,8 +25,6 @@ app.get('/',function(req,res){
             conexion.end();
         }
     })
-
-
 })
 app.post('/user/create',async(req,res)=>{
     const {FirstName,LastName,document,address,phone,email}=req.body;
