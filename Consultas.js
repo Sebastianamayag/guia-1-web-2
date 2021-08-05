@@ -26,10 +26,6 @@ app.get('/',function(req,res){
             conexion.end();
         }
     })
-
-
 })
-
-
 
 app.listen(3000)
