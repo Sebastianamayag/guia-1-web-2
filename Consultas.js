@@ -86,6 +86,35 @@ app.put('/user/update',async(req,res)=>{
         }
     });
 });
-
+app.delete('/user/delete',async(req,res)=>{
+    const {email}=req.body;
+    const query='SELECT * FROM users where email=?';
+    await conexion.query(query,email,async(err,rows,fields)=>{
+        if(rows[0]){
+            res.json({
+                Status:400,
+                error:'El usuario no esta creado'
+            });
+            return;
+        }else{
+            const query_2=`
+            DELETE FROM users WHERE email = ?
+            `;
+            await conexion.query(query_2,[email],(err,rows,fields)=>{
+                if(!err){
+                    res.json({
+                        Status:200,
+                        res:"Usuario Eliminado Correctamente"
+                    });
+                }else{
+                res.json({
+                        Status:400,
+                        res:err
+                    });
+                }
+            });
+        }
+    });
+});
 
 app.listen(3000)
