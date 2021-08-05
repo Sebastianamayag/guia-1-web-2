@@ -1,7 +1,7 @@
 const mysql=require('mysql')
 const express=require('express');
-const { response } = require('express');
 const app=express();
+app.use(express.json());
 const conexion=mysql.createConnection({
     host:'remotemysql.com',
     user:'vvU6Km6Xaf',
@@ -29,7 +29,36 @@ app.get('/',function(req,res){
 
 
 })
-
+app.post('/user/create',async(req,res)=>{
+    const {FirstName,LastName,document,address,phone,email}=req.body;
+    const query='SELECT * FROM users where email=?';
+    await conexion.query(query,email,async(err,rows,fields)=>{
+        if(rows[0]){
+            res.json({
+                Status:400,
+                error:'El usuario ya ha sido creado'
+            });
+            return;
+        }else{
+            const query_2=`
+                INSERT INTO users (FirstName,LastName,document,address,phone,email)values(?,?,?,?,?,?)
+            `;
+            await conexion.query(query_2,[FirstName,LastName,document,address,phone,email],(err,rows,fields)=>{
+                if(!err){
+                    res.json({
+                        Status:200,
+                        res:"Usuario Creado Correctamente"
+                    });
+                }else{
+                res.json({
+                        Status:400,
+                        res:err
+                    });
+                }
+            });
+        }
+    });
+});
 
 
 app.listen(3000)
