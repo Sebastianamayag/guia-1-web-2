@@ -3,10 +3,10 @@ const express=require('express');
 const { response } = require('express');
 const app=express();
 const conexion=mysql.createConnection({
-    host:'',
-    user:'',
-    password:'',
-    database:''
+    host:'remotemysql.com',
+    user:'vvU6Km6Xaf',
+    password:'3qOwmBXtC1',
+    database:'vvU6Km6Xaf'
 })
 
 conexion.connect((error)=>{
