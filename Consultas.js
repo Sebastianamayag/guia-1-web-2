@@ -27,7 +27,7 @@ app.get('/',function(req,res){
     })
 })
 app.post('/user/create',async(req,res)=>{
-    const {FirstName,LastName,document,address,phone,email}=req.body;
+    const {firstName,lastName,document,address,phone,email}=req.body;
     const query='SELECT * FROM users where email=?';
     await conexion.query(query,email,async(err,rows,fields)=>{
         if(rows[0]){
@@ -38,13 +38,43 @@ app.post('/user/create',async(req,res)=>{
             return;
         }else{
             const query_2=`
-                INSERT INTO users (FirstName,LastName,document,address,phone,email)values(?,?,?,?,?,?)
+                INSERT INTO users (firstName,lastName,document,address,phone,email)values(?,?,?,?,?,?)
             `;
-            await conexion.query(query_2,[FirstName,LastName,document,address,phone,email],(err,rows,fields)=>{
+            await conexion.query(query_2,[firstName,lastName,document,address,phone,email],(err,rows,fields)=>{
                 if(!err){
                     res.json({
                         Status:200,
                         res:"Usuario Creado Correctamente"
+                    });
+                }else{
+                res.json({
+                        Status:400,
+                        res:err
+                    });
+                }
+            });
+        }
+    });
+});
+app.put('/user/update',async(req,res)=>{
+    const {firstName,lastName,document,address,phone,email}=req.body;
+    const query='SELECT * FROM users where email=?';
+    await conexion.query(query,email,async(err,rows,fields)=>{
+        if(rows[0]){
+            res.json({
+                Status:400,
+                error:'El usuario no esta creado'
+            });
+            return;
+        }else{
+            const query_2=`
+                UPDATE users set firstName =?, lastName =?, document =?, address =?, phone =? WHERE email = ?
+            `;
+            await conexion.query(query_2,[firstName,lastName,document,address,phone,email],(err,rows,fields)=>{
+                if(!err){
+                    res.json({
+                        Status:200,
+                        res:"Usuario Actualizado Correctamente"
                     });
                 }else{
                 res.json({
