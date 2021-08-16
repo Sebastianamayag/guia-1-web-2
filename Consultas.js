@@ -12,7 +12,7 @@ const conexion=mysql.createConnection({
 conexion.connect((error)=>{
     if(error) throw error
     console.log('Conexión Exitosa!')
-    
+
 })
 
 app.get('/',function(req,res){
@@ -118,4 +118,7 @@ app.delete('/user/delete',async(req,res)=>{
     });
 });
 
-app.listen(3000)
+let port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+})
