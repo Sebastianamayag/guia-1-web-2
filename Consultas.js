@@ -2,6 +2,7 @@ import mysql from 'mysql';
 import express from 'express';
 const app=express();
 app.use(express.json());
+app.set('port',process.env.PORT || 3000);
 const conexion=mysql.createConnection({
     host:'remotemysql.com',
     user:'vvU6Km6Xaf',
@@ -117,4 +118,6 @@ app.delete('/user/delete',async(req,res)=>{
     });
 });
 
-app.listen(3000)
+app.listen(app.get('port'),()=>{
+    console.log('Servidor corriendo en el puerto',app.get('port'));
+});
