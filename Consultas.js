@@ -15,7 +15,7 @@ conexion.connect((error)=>{
     console.log('Conexión Exitosa!')
 })
 
-app.get('/',function(req,res){
+app.get('/user/get',function(req,res){
     conexion.query('SELECT * FROM users',function(error,rows){
         if(!!error){
             console.log('Conexión Fallida!')
