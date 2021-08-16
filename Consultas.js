@@ -12,6 +12,7 @@ const conexion=mysql.createConnection({
 conexion.connect((error)=>{
     if(error) throw error
     console.log('Conexión Exitosa!')
+    
 })
 
 app.get('/',function(req,res){
