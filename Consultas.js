@@ -1,5 +1,5 @@
-const mysql=require('mysql')
-const express=require('express');
+import mysql from 'mysql';
+import express from 'express';
 const app=express();
 app.use(express.json());
 const conexion=mysql.createConnection({
