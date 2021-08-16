@@ -1,8 +1,10 @@
 import mysql from 'mysql';
 import express from 'express';
+import cors  from 'cors';
 const app=express();
 app.use(express.json());
-app.set('port',process.env.PORT || 3000);
+app.use(cors());
+app.set('port',process.env.PORT || 4000);
 const conexion=mysql.createConnection({
     host:'remotemysql.com',
     user:'vvU6Km6Xaf',
@@ -15,18 +17,32 @@ conexion.connect((error)=>{
     console.log('Conexión Exitosa!')
 })
 
-app.get('/',function(req,res){
+app.get('/user/get',function(req,res){
     conexion.query('SELECT * FROM users',function(error,rows){
-        if(!!error){
+        if(error){
             console.log('Conexión Fallida!')
         }else{
             console.log('Consulta de la información de la tabla')
             console.log(rows)
             res.json(rows)
-            conexion.end();
+            // conexion.end();
         }
     })
 })
+
+app.get('/user/getone/:id',function(req,res){
+    const {id}=req.params;
+    const query='SELECT * FROM users where id=?';
+    conexion.query(query, id,function(error,rows){
+        if(error){
+            console.log('Conexión Fallida!')
+        }else{
+            res.json(rows)
+            // conexion.end();
+        }
+    })
+})
+
 app.post('/user/create',async(req,res)=>{
     const {firstName,lastName,document,address,phone,email}=req.body;
     const query='SELECT * FROM users where email=?';
@@ -61,7 +77,7 @@ app.put('/user/update',async(req,res)=>{
     const {firstName,lastName,document,address,phone,email}=req.body;
     const query='SELECT * FROM users where email=?';
     await conexion.query(query,email,async(err,rows,fields)=>{
-        if(rows[0]){
+        if(!rows[0]){
             res.json({
                 Status:400,
                 error:'El usuario no esta creado'
@@ -88,10 +104,11 @@ app.put('/user/update',async(req,res)=>{
     });
 });
 app.delete('/user/delete',async(req,res)=>{
+    console.log(req.body)
     const {email}=req.body;
     const query='SELECT * FROM users where email=?';
     await conexion.query(query,email,async(err,rows,fields)=>{
-        if(rows[0]){
+        if(!rows[0]){
             res.json({
                 Status:400,
                 error:'El usuario no esta creado'
@@ -105,12 +122,14 @@ app.delete('/user/delete',async(req,res)=>{
                 if(!err){
                     res.json({
                         Status:200,
-                        res:"Usuario Eliminado Correctamente"
+                        res:"Usuario Eliminado Correctamente",
+                        ok:true
                     });
                 }else{
                 res.json({
                         Status:400,
-                        res:err
+                        res:err,
+                        ok:false
                     });
                 }
             });
