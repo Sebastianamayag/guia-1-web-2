@@ -1,5 +1,5 @@
-import mysql from 'mysql';
-import express from 'express';
+const mysql=require('mysql')
+const express=require('express');
 const app=express();
 app.use(express.json());
 const conexion=mysql.createConnection({
@@ -12,7 +12,6 @@ const conexion=mysql.createConnection({
 conexion.connect((error)=>{
     if(error) throw error
     console.log('Conexión Exitosa!')
-
 })
 
 app.get('/',function(req,res){
@@ -118,7 +117,4 @@ app.delete('/user/delete',async(req,res)=>{
     });
 });
 
-let port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-})
+app.listen(3000)
